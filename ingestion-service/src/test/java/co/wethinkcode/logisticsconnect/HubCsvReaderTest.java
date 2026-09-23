@@ -20,4 +20,14 @@ public class HubCsvReaderTest {
         assertEquals("Johannesburg Central", firstHub.getSortingCenter());
         assertEquals(true, firstHub.getActive());
     }
+
+
+    @Test
+    void shouldReadAllHubsFromCsv() {
+        HubCsvReader reader = new HubCsvReader();
+
+        List<Hub> hubs = reader.read("src/main/resources/hubs-global.csv");
+
+        assertEquals(18, hubs.size());
+    }
 }

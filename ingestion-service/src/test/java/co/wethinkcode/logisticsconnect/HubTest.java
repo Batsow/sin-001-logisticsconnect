@@ -88,4 +88,17 @@ public class HubTest {
         assertEquals("Cape Town Port", hub.getSortingCenter());
         assertEquals(true, hub.getActive());
     }
+
+
+    @Test
+    void shouldAllowUnknownActiveStatus() {
+        Hub hub = new Hub(
+                "H-511",
+                "Limpopo",
+                "Polokwane Hub",
+                null
+        );
+
+        assertEquals(null, hub.getActive());
+    }
 }

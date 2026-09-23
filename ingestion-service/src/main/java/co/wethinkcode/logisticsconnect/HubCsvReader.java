@@ -15,18 +15,21 @@ public class HubCsvReader {
 
             reader.readNext();
 
-            String[] row = reader.readNext();
-
             HubDataCleaner cleaner = new HubDataCleaner();
 
-            Hub hub = new Hub(
-                    cleaner.cleanHubId(row[0]),
-                    cleaner.cleanProvince(row[1]),
-                    cleaner.cleanSortingCenter(row[2]),
-                    cleaner.cleanActive(row[3])
-            );
+            String[] row;
 
-            hubs.add(hub);
+            while ((row = reader.readNext()) != null) {
+
+                Hub hub = new Hub(
+                        cleaner.cleanHubId(row[0]),
+                        cleaner.cleanProvince(row[1]),
+                        cleaner.cleanSortingCenter(row[2]),
+                        cleaner.cleanActive(row[3])
+                );
+
+                hubs.add(hub);
+            }
 
             reader.close();
 

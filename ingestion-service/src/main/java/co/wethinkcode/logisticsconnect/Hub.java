@@ -4,9 +4,9 @@ public class Hub {
     private String hubId;
     private String province;
     private String sortingCenter;
-    private boolean active;
+    private Boolean active;
 
-    public Hub(String hubId, String province, String sortingCenter, boolean active) {
+    public Hub(String hubId, String province, String sortingCenter, Boolean active) {
         this.hubId = hubId;
         this.province = province;
         this.sortingCenter = sortingCenter;
@@ -25,7 +25,7 @@ public class Hub {
         return sortingCenter;
     }
 
-    public boolean getActive() {
+    public Boolean getActive() {
         return active;
     }
 }
