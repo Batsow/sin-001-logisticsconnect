@@ -44,4 +44,17 @@ public class HubTest {
 
         assertEquals("Gauteng", hub.getProvince());
     }
+
+
+    @Test
+    void shouldReturnSortingCenter() {
+        Hub hub = new Hub(
+                "H-503",
+                "KwaZulu-Natal",
+                "Durban Harbour",
+                true
+        );
+
+        assertEquals("Durban Harbour", hub.getSortingCenter());
+    }
 }
