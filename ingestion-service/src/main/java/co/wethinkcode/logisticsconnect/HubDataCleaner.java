@@ -33,6 +33,10 @@ public class HubDataCleaner {
 
 
     public String cleanSortingCenter(String sortingCenter) {
+        if (sortingCenter == null) {
+            return null;
+        }
+
         sortingCenter = sortingCenter.trim();
 
         if (sortingCenter.isEmpty()) {
