@@ -193,4 +193,14 @@ class HubDataCleanerTest {
         assertEquals("KwaZulu-Natal", result);
     }
 
+
+    @Test
+    void shouldReturnNullForBlankSortingCenter() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        String result = cleaner.cleanSortingCenter("   ");
+
+        assertEquals(null, result);
+    }
+
 }

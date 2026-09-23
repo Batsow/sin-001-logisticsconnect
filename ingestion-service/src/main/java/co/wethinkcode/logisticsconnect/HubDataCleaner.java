@@ -31,6 +31,10 @@ public class HubDataCleaner {
     public String cleanSortingCenter(String sortingCenter) {
         sortingCenter = sortingCenter.trim();
 
+        if (sortingCenter.isEmpty()) {
+            return null;
+        }
+
         String[] words = sortingCenter.split(" ");
         String result = "";
 
