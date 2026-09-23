@@ -70,4 +70,22 @@ public class HubTest {
 
         assertEquals(true, hub.getActive());
     }
+
+
+    @Test
+    void shouldCreateHubWithCleanedValues() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        Hub hub = new Hub(
+                cleaner.cleanHubId("h-501"),
+                cleaner.cleanProvince("western cape"),
+                cleaner.cleanSortingCenter("Cape Town  Port"),
+                cleaner.cleanActive("yes")
+        );
+
+        assertEquals("H-501", hub.getHubId());
+        assertEquals("Western Cape", hub.getProvince());
+        assertEquals("Cape Town Port", hub.getSortingCenter());
+        assertEquals(true, hub.getActive());
+    }
 }
