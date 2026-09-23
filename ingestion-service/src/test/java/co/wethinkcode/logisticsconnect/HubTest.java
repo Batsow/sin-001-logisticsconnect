@@ -31,4 +31,17 @@ public class HubTest {
 
         assertEquals("H-501", hub.getHubId());
     }
+
+
+    @Test
+    void shouldReturnProvince() {
+        Hub hub = new Hub(
+                "H-502",
+                "Gauteng",
+                "Pretoria North",
+                false
+        );
+
+        assertEquals("Gauteng", hub.getProvince());
+    }
 }
