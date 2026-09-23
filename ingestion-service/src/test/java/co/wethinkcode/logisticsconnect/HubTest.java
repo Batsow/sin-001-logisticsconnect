@@ -57,4 +57,17 @@ public class HubTest {
 
         assertEquals("Durban Harbour", hub.getSortingCenter());
     }
+
+
+    @Test
+    void shouldReturnActiveStatus() {
+        Hub hub = new Hub(
+                "H-504",
+                "Gauteng",
+                "Johannesburg Central",
+                true
+        );
+
+        assertEquals(true, hub.getActive());
+    }
 }
