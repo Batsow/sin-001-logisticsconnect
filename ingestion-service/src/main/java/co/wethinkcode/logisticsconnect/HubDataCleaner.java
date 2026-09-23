@@ -3,6 +3,10 @@ package co.wethinkcode.logisticsconnect;
 public class HubDataCleaner {
 
     public String cleanProvince(String province) {
+        if (province == null) {
+            return null;
+        }
+
         province = province.trim().toLowerCase();
 
         if (province.isEmpty()) {
