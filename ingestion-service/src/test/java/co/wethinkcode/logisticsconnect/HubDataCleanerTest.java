@@ -223,4 +223,13 @@ class HubDataCleanerTest {
         assertEquals(null, result);
     }
 
+    @Test
+    void shouldReturnNullForNullHubId() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        String result = cleaner.cleanHubId(null);
+
+        assertEquals(null, result);
+    }
+
 }

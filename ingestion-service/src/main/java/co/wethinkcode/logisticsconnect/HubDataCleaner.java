@@ -57,6 +57,10 @@ public class HubDataCleaner {
     
 
     public String cleanHubId(String hubId) {
+        if (hubId == null) {
+            return null;
+        }
+
         hubId = hubId.trim();
 
         return hubId.toUpperCase();
