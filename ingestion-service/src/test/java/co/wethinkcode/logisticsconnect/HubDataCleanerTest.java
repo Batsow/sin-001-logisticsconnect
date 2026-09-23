@@ -3,6 +3,7 @@ package co.wethinkcode.logisticsconnect;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class HubDataCleanerTest {
     @Test
@@ -77,4 +78,119 @@ class HubDataCleanerTest {
 
         assertEquals(true, result);
     }
+
+    @Test
+    void shouldNormalizeYToTrue() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        Boolean result = cleaner.cleanActive("Y");
+
+        assertEquals(true, result);
+    }
+
+
+    @Test
+    void shouldNormalizeOneToTrue() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        Boolean result = cleaner.cleanActive("1");
+
+        assertEquals(true, result);
+    }
+
+
+    @Test
+    void shouldNormalizeTrueToTrue() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        Boolean result = cleaner.cleanActive("true");
+
+        assertEquals(true, result);
+    }
+
+
+    @Test
+    void shouldNormalizeNToFalse() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        Boolean result = cleaner.cleanActive("N");
+
+        assertEquals(false, result);
+    }
+
+    @Test
+    void shouldNormalizeNoToFalse() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        Boolean result = cleaner.cleanActive("no");
+
+        assertEquals(false, result);
+    }
+
+    @Test
+    void shouldNormalizeZeroToFalse() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        Boolean result = cleaner.cleanActive("0");
+
+        assertEquals(false, result);
+    }
+
+
+    @Test
+    void shouldNormalizeFalseToFalse() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        Boolean result = cleaner.cleanActive("false");
+
+        assertEquals(false, result);
+    }
+
+    @Test
+    void shouldReturnNullForUnknownActiveValue() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        Boolean result = cleaner.cleanActive("unknown");
+
+        assertNull(result);
+    }
+
+    @Test
+    void shouldReturnNullForNotApplicableActiveValue() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        Boolean result = cleaner.cleanActive("N/A");
+
+        assertNull(result);
+    }
+
+
+    @Test
+    void shouldReturnNullForBlankProvince() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        String result = cleaner.cleanProvince("");
+
+        assertNull(result);
+    }
+
+    @Test
+    void shouldReturnNullForBlankSpacesProvince() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        String result = cleaner.cleanProvince("   ");
+
+        assertNull(result);
+    }
+
+
+    @Test
+    void shouldNormalizeKwaZuluNatalWithoutHyphen() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        String result = cleaner.cleanProvince("KwaZulu Natal");
+
+        assertEquals("KwaZulu-Natal", result);
+    }
+
 }

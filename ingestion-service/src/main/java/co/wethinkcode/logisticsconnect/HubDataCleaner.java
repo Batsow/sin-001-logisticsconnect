@@ -5,6 +5,10 @@ public class HubDataCleaner {
     public String cleanProvince(String province) {
         province = province.trim().toLowerCase();
 
+        if (province.isEmpty()) {
+            return null;
+        }
+
         String[] words = province.split(" ");
         String result = "";
 
@@ -16,7 +20,7 @@ public class HubDataCleaner {
         }
         result = result.trim();
 
-        if (result.equals("Kwa-zulu Natal")) {
+        if (result.equals("Kwa-zulu Natal") || result.equals("Kwazulu Natal")) {
             result = "KwaZulu-Natal";
         }
 
@@ -50,8 +54,12 @@ public class HubDataCleaner {
     public Boolean cleanActive(String active) {
         active = active.trim().toLowerCase();
 
-        if (active.equals("yes")) {
+        if (active.equals("yes") || active.equals("y") || active.equals("1") || active.equals("true")) {
             return true;
+        }
+
+        if (active.equals("n") || active.equals("no") || active.equals("0") || active.equals("false")) {
+            return false;
         }
 
         return null;
