@@ -19,4 +19,16 @@ public class HubTest {
         assertEquals("Johannesburg Central", hub.getSortingCenter());
         assertEquals(true, hub.getActive());
     }
+
+    @Test
+    void shouldReturnHubId() {
+        Hub hub = new Hub(
+                "H-501",
+                "Western Cape",
+                "Cape Town Port",
+                true
+        );
+
+        assertEquals("H-501", hub.getHubId());
+    }
 }
