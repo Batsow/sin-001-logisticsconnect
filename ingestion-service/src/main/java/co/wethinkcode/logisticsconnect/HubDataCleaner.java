@@ -66,6 +66,10 @@ public class HubDataCleaner {
             return null;
         }
 
+        if (sortingCenter.equalsIgnoreCase("unknown")) {
+            return null;
+        }
+
         String[] words = sortingCenter.split(" ");
         String result = "";
 

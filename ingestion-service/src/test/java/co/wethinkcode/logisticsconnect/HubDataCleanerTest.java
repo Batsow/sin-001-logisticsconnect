@@ -390,4 +390,13 @@ class HubDataCleanerTest {
         assertEquals("Gauteng", result);
     }
 
+    @Test
+    void shouldHandleUnknownSortingCenter() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        String result = cleaner.cleanSortingCenter("unknown");
+
+        assertEquals(null, result);
+    }
+
 }
