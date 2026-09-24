@@ -119,4 +119,23 @@ public class HubCsvReaderTest {
 
         assertEquals("H-501", hub.getHubId());
     }
+
+
+    @Test
+    void shouldCleanActiveStatusFromCsv() {
+        HubCsvReader reader = new HubCsvReader();
+
+        List<Hub> hubs = reader.read("src/main/resources/hubs-global.csv");
+
+        Hub hub = null;
+
+        for (Hub currentHub : hubs) {
+            if ("H-501".equals(currentHub.getHubId())) {
+                hub = currentHub;
+                break;
+            }
+        }
+
+        assertEquals(true, hub.getActive());
+    }
 }
