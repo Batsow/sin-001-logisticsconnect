@@ -21,6 +21,10 @@ public class HubDataCleaner {
             return null;
         }
 
+        if (province.equals("tbd")) {
+            return null;
+        }
+
         String[] words = province.split(" ");
         String result = "";
 
