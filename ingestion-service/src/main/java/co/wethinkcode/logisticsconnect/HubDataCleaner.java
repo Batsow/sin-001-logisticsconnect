@@ -29,6 +29,10 @@ public class HubDataCleaner {
             return null;
         }
 
+        if (province.equals("nan")) {
+            return null;
+        }
+
         String[] words = province.split(" ");
         String result = "";
 

@@ -333,4 +333,14 @@ class HubDataCleanerTest {
         assertEquals(null, result);
     }
 
+
+    @Test
+    void shouldReturnNullForNanProvince() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        String result = cleaner.cleanProvince("NaN");
+
+        assertEquals(null, result);
+    }
+
 }
