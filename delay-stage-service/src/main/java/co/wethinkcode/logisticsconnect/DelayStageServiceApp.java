@@ -9,7 +9,7 @@ public class DelayStageServiceApp {
 
         app.get("/health", ctx -> ctx.result("OK"));
 
-        app.get("/delay-stage/{hubId}", ctx -> ctx.status(200));
+        app.get("/delay-stage/{hubId}", ctx -> ctx.result("0"));
 
         return app;
     }

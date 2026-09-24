@@ -5,6 +5,7 @@ import io.javalin.testtools.JavalinTest;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DelayStageServiceAppTest {
     @Test
@@ -15,6 +16,19 @@ public class DelayStageServiceAppTest {
             var response = client.get("/delay-stage/H-500");
 
             assertEquals(200, response.code());
+        });
+    }
+
+
+    @Test
+    void shouldReturnCurrentDelayStage() {
+        Javalin app = DelayStageServiceApp.createApp();
+
+        JavalinTest.test(app, (server, client) -> {
+            var response = client.get("/delay-stage/H-500");
+
+            assertEquals(200, response.code());
+            assertTrue(response.body().string().contains("0"));
         });
     }
 }
