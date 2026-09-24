@@ -50,6 +50,11 @@ public class TransitServiceApp {
                     HttpResponse.BodyHandlers.ofString()
             );
 
+            if (hubResponse.statusCode() == 404) {
+                ctx.status(404);
+                return;
+            }
+
             ObjectMapper mapper = new ObjectMapper();
 
             Map<String, Object> hub = mapper.readValue(

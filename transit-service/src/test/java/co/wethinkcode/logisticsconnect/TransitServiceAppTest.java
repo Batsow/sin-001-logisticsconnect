@@ -34,6 +34,13 @@ public class TransitServiceAppTest {
         hubService.get("/hubs/{hubId}", ctx -> {
             hubServiceWasCalled.set(true);
 
+            String hubId = ctx.pathParam("hubId");
+
+            if (!hubId.equals("H-500")) {
+                ctx.status(404);
+                return;
+            }
+
             ctx.json(Map.of(
                     "hubId", "H-500",
                     "province", "Gauteng",
@@ -167,6 +174,21 @@ public class TransitServiceAppTest {
 
             assertTrue(body.contains("\"delayStage\":3"));
             assertTrue(body.contains("\"etaMinutes\":60"));
+        });
+    }
+
+
+    @Test
+    void shouldReturnNotFoundWhenHubDoesNotExist() {
+        Javalin app = TransitServiceApp.createApp(
+                hubServiceUrl,
+                delayStageServiceUrl
+        );
+
+        JavalinTest.test(app, (server, client) -> {
+            var response = client.get("/eta/H-999");
+
+            assertEquals(404, response.code());
         });
     }
 }
