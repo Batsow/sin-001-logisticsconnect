@@ -1,5 +1,6 @@
 package co.wethinkcode.logisticsconnect;
 
+import co.wethinkcode.logisticsconnect.mq.ActiveMqDelayStagePublisher;
 import io.javalin.Javalin;
 
 import java.util.HashMap;
@@ -68,6 +69,6 @@ public class DelayStageServiceApp {
     }
 
     public static void main(String[] args) {
-        createApp().start(7052);
+        createApp(new ActiveMqDelayStagePublisher()).start(7052);
     }
 }
