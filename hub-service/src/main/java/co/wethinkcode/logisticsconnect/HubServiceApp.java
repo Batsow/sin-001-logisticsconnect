@@ -44,11 +44,13 @@ public class HubServiceApp {
                 if (hubId.equals(hub.get("hubId"))) {
                     String province = (String) hub.get("province");
                     String sortingCenter = (String) hub.get("sortingCenter");
+                    Boolean active = (Boolean) hub.get("active");
 
                     ctx.json(Map.of(
                             "hubId", hubId,
                             "province", province,
-                            "sortingCenter", sortingCenter
+                            "sortingCenter", sortingCenter,
+                            "active", active
                     ));
                     return;
                 }
