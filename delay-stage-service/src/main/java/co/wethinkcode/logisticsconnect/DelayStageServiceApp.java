@@ -36,7 +36,14 @@ public class DelayStageServiceApp {
                 return;
             }
 
-            int stage = Integer.parseInt(stageParameter);
+            int stage;
+
+            try {
+                stage = Integer.parseInt(stageParameter);
+            } catch (NumberFormatException e) {
+                ctx.status(400);
+                return;
+            }
 
             if (stage < 0 || stage > 8) {
                 ctx.status(400);

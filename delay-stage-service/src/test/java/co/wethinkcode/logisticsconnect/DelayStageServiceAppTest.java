@@ -88,4 +88,19 @@ public class DelayStageServiceAppTest {
             assertEquals(400, response.code());
         });
     }
+
+
+    @Test
+    void shouldRejectNonNumericDelayStage() {
+        Javalin app = DelayStageServiceApp.createApp();
+
+        JavalinTest.test(app, (server, client) -> {
+            var response = client.put("/delay-stage/H-500?stage=abc");
+
+            assertEquals(400, response.code());
+        });
+    }
 }
+
+
+
