@@ -1,5 +1,14 @@
 package co.wethinkcode.logisticsconnect;
 
+import co.wethinkcode.logisticsconnect.mq.MqConfig;
+import org.apache.activemq.ActiveMQConnectionFactory;
+
+import javax.jms.Connection;
+import javax.jms.MessageProducer;
+import javax.jms.Session;
+import javax.jms.TextMessage;
+import javax.jms.Topic;
+
 import io.javalin.Javalin;
 import io.javalin.testtools.JavalinTest;
 import org.junit.jupiter.api.AfterEach;
@@ -216,5 +225,114 @@ public class TransitServiceAppTest {
 
             assertTrue(!delayStageServiceWasCalled.get());
         });
+    }
+
+
+    @Test
+    void shouldUseDelayStageFromSubscriberStore() throws Exception {
+        TransitDelayStageStore store = new TransitDelayStageStore();
+
+        TransitDelayStageSubscriber subscriber =
+                new TransitDelayStageSubscriber(store);
+
+        subscriber.start();
+
+        try {
+            // Give the subscriber a moment to connect to ActiveMQ.
+            Thread.sleep(200);
+
+            // Simulate a delay-stage update arriving through the message handler.
+            subscriber.handleMessage(
+                    "{\"hubId\":\"H-500\",\"stage\":7}"
+            );
+
+            Javalin app = TransitServiceApp.createApp(
+                    hubServiceUrl,
+                    store
+            );
+
+            JavalinTest.test(app, (server, client) -> {
+                var response = client.get("/eta/H-500");
+
+                assertEquals(200, response.code());
+
+                String body = response.body().string();
+
+                assertTrue(body.contains("\"delayStage\":7"));
+                assertTrue(body.contains("\"etaMinutes\":100"));
+
+                assertTrue(!delayStageServiceWasCalled.get());
+            });
+        } finally {
+            subscriber.stop();
+        }
+    }
+
+    @Test
+    void shouldUseDelayStageReceivedFromActiveMqForEta() throws Exception {
+        TransitDelayStageStore store = new TransitDelayStageStore();
+
+        TransitDelayStageSubscriber subscriber =
+                new TransitDelayStageSubscriber(store);
+
+        subscriber.start();
+
+        try {
+            ActiveMQConnectionFactory factory =
+                    new ActiveMQConnectionFactory(MqConfig.BROKER_URL);
+
+            Connection connection = factory.createConnection();
+
+            Session session = connection.createSession(
+                    false,
+                    Session.AUTO_ACKNOWLEDGE
+            );
+
+            Topic topic = session.createTopic(MqConfig.TOPIC);
+
+            MessageProducer producer = session.createProducer(topic);
+
+            connection.start();
+
+            TextMessage message = session.createTextMessage(
+                    "{\"hubId\":\"H-500\",\"stage\":7}"
+            );
+
+            producer.send(message);
+
+            // Give the subscriber time to receive the message.
+            for (int i = 0; i < 20; i++) {
+                if (store.getStage("H-500") == 7) {
+                    break;
+                }
+
+                Thread.sleep(100);
+            }
+
+            Javalin app = TransitServiceApp.createApp(
+                    hubServiceUrl,
+                    store
+            );
+
+            JavalinTest.test(app, (server, client) -> {
+                var response = client.get("/eta/H-500");
+
+                assertEquals(200, response.code());
+
+                String body = response.body().string();
+
+                assertTrue(body.contains("\"delayStage\":7"));
+                assertTrue(body.contains("\"etaMinutes\":100"));
+
+                assertTrue(!delayStageServiceWasCalled.get());
+            });
+
+            producer.close();
+            session.close();
+            connection.close();
+
+        } finally {
+            subscriber.stop();
+        }
     }
 }
