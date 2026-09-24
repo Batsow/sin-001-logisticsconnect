@@ -78,6 +78,10 @@ public class HubDataCleaner {
             return null;
         }
 
+        if (sortingCenter.equals("-")) {
+            return null;
+        }
+
         String[] words = sortingCenter.split(" ");
         String result = "";
 

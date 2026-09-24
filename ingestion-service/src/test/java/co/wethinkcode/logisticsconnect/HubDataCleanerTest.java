@@ -418,4 +418,14 @@ class HubDataCleanerTest {
         assertEquals(null, result);
     }
 
+
+    @Test
+    void shouldHandleDashSortingCenter() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        String result = cleaner.cleanSortingCenter("-");
+
+        assertEquals(null, result);
+    }
+
 }
