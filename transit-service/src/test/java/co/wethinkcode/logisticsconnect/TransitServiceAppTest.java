@@ -149,4 +149,24 @@ public class TransitServiceAppTest {
             assertTrue(delayStageServiceWasCalled.get());
         });
     }
+
+
+    @Test
+    void shouldCalculateEtaUsingDelayStage() {
+        Javalin app = TransitServiceApp.createApp(
+                hubServiceUrl,
+                delayStageServiceUrl
+        );
+
+        JavalinTest.test(app, (server, client) -> {
+            var response = client.get("/eta/H-500");
+
+            assertEquals(200, response.code());
+
+            String body = response.body().string();
+
+            assertTrue(body.contains("\"delayStage\":3"));
+            assertTrue(body.contains("\"etaMinutes\":60"));
+        });
+    }
 }

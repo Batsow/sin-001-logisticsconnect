@@ -73,11 +73,15 @@ public class TransitServiceApp {
                     new TypeReference<Map<String, Object>>() {}
             );
 
+            int stage = ((Number) delayStage.get("stage")).intValue();
+
+            int etaMinutes = 30 + (stage * 10);
+
             ctx.json(Map.of(
                     "hubId", hub.get("hubId"),
                     "sortingCenter", hub.get("sortingCenter"),
-                    "delayStage", delayStage.get("stage"),
-                    "etaMinutes", 0
+                    "delayStage", stage,
+                    "etaMinutes", etaMinutes
             ));
         });
 
