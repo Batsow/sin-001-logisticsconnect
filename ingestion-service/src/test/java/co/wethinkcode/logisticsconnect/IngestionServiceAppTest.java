@@ -1,8 +1,12 @@
 package co.wethinkcode.logisticsconnect;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.Javalin;
 import io.javalin.testtools.JavalinTest;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -60,6 +64,26 @@ class IngestionServiceAppTest {
             assertTrue(body.contains("\"province\":\"Gauteng\""));
             assertTrue(body.contains("\"sortingCenter\":\"Johannesburg Central\""));
             assertTrue(body.contains("\"active\":true"));
+        });
+    }
+
+
+
+    @Test
+    void shouldReturnTwelveUniqueHubs() {
+        Javalin app = IngestionServiceApp.createApp();
+
+        JavalinTest.test(app, (server, client) -> {
+            var response = client.get("/hubs");
+
+            ObjectMapper mapper = new ObjectMapper();
+
+            List<?> hubs = mapper.readValue(
+                    response.body().string(),
+                    List.class
+            );
+
+            assertEquals(12, hubs.size());
         });
     }
 }
