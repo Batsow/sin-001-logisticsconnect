@@ -381,4 +381,13 @@ class HubDataCleanerTest {
         assertEquals("H-501", result);
     }
 
+    @Test
+    void shouldCleanProvinceCasing() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        String result = cleaner.cleanProvince("gauteng");
+
+        assertEquals("Gauteng", result);
+    }
+
 }
