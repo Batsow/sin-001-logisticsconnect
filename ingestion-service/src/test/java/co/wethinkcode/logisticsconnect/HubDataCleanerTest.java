@@ -428,4 +428,14 @@ class HubDataCleanerTest {
         assertEquals(null, result);
     }
 
+
+    @Test
+    void shouldHandleNaNSortingCenter() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        String result = cleaner.cleanSortingCenter("NaN");
+
+        assertEquals(null, result);
+    }
+
 }

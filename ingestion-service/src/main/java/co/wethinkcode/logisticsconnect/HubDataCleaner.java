@@ -82,6 +82,10 @@ public class HubDataCleaner {
             return null;
         }
 
+        if (sortingCenter.equalsIgnoreCase("nan")) {
+            return null;
+        }
+
         String[] words = sortingCenter.split(" ");
         String result = "";
 
