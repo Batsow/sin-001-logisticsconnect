@@ -409,4 +409,13 @@ class HubDataCleanerTest {
         assertEquals(null, result);
     }
 
+    @Test
+    void shouldHandleTbdSortingCenter() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        String result = cleaner.cleanSortingCenter("TBD");
+
+        assertEquals(null, result);
+    }
+
 }
