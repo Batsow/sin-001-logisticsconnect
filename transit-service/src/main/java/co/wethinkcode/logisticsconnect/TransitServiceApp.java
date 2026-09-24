@@ -4,14 +4,17 @@ import io.javalin.Javalin;
 
 public class TransitServiceApp {
 
-    public static void main(String[] args) {
-        Javalin app = Javalin.create().start(7053);
+    public static Javalin createApp() {
+        Javalin app = Javalin.create();
 
         app.get("/health", ctx -> ctx.result("OK"));
 
-        // TODO (Calculates estimated arrival windows based on hub and delay stage.)
-        // Add domain endpoints for transit-service here.
+        app.get("/eta/{hubId}", ctx -> ctx.status(200));
+
+        return app;
+    }
+
+    public static void main(String[] args) {
+        createApp().start(7053);
     }
 }
-
-// MQ TODO: subscribes to ActiveMQ topic MqConfig.TOPIC at MqConfig.BROKER_URL (see co.wethinkcode.logisticsconnect.mq.MqConfig)
