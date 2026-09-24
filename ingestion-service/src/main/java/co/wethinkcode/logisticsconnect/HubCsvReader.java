@@ -4,7 +4,9 @@ import com.opencsv.CSVReader;
 
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class HubCsvReader {
     public List<Hub> read(String filePath) {
@@ -17,6 +19,8 @@ public class HubCsvReader {
 
             HubDataCleaner cleaner = new HubDataCleaner();
 
+            Set<String> seenHubs = new HashSet<>();
+
             String[] row;
 
             while ((row = reader.readNext()) != null) {
@@ -28,9 +32,13 @@ public class HubCsvReader {
                         cleaner.cleanActive(row[3])
                 );
 
-                hubs.add(hub);
-            }
+                String duplicateKey = hub.getProvince() + "|" + hub.getSortingCenter();
 
+                if (!seenHubs.contains(duplicateKey)) {
+                    hubs.add(hub);
+                    seenHubs.add(duplicateKey);
+                }
+            }
             reader.close();
 
         } catch (Exception e) {

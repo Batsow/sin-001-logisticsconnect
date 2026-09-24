@@ -28,6 +28,20 @@ public class HubCsvReaderTest {
 
         List<Hub> hubs = reader.read("src/main/resources/hubs-global.csv");
 
-        assertEquals(18, hubs.size());
+        assertEquals(12, hubs.size());
+    }
+
+
+    @Test
+    void shouldRemoveDuplicateHubs() {
+        HubCsvReader reader = new HubCsvReader();
+
+        List<Hub> hubs = reader.read("src/main/resources/hubs-global.csv");
+
+        long johannesburgCentralCount = hubs.stream()
+                .filter(hub -> "Johannesburg Central".equals(hub.getSortingCenter()))
+                .count();
+
+        assertEquals(1, johannesburgCentralCount);
     }
 }
