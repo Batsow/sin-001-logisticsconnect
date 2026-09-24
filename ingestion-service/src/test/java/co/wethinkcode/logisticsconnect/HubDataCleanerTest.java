@@ -323,4 +323,14 @@ class HubDataCleanerTest {
         assertEquals(null, result);
     }
 
+
+    @Test
+    void shouldReturnNullForDashProvince() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        String result = cleaner.cleanProvince("-");
+
+        assertEquals(null, result);
+    }
+
 }
