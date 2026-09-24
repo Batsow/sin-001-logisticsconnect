@@ -30,6 +30,29 @@ public class TransitServiceApp {
             String hubServiceUrl,
             String delayStageServiceUrl
     ) {
+        return createAppWithStore(
+                hubServiceUrl,
+                delayStageServiceUrl,
+                null
+        );
+    }
+
+    public static Javalin createApp(
+            String hubServiceUrl,
+            TransitDelayStageStore store
+    ) {
+        return createAppWithStore(
+                hubServiceUrl,
+                null,
+                store
+        );
+    }
+
+    private static Javalin createAppWithStore(
+            String hubServiceUrl,
+            String delayStageServiceUrl,
+            TransitDelayStageStore store
+    ) {
         Javalin app = Javalin.create();
 
         app.get("/health", ctx -> ctx.result("OK"));
@@ -38,6 +61,7 @@ public class TransitServiceApp {
             String hubId = ctx.pathParam("hubId");
 
             HttpClient client = HttpClient.newHttpClient();
+            ObjectMapper mapper = new ObjectMapper();
 
             // Get hub information
             HttpRequest hubRequest = HttpRequest.newBuilder()
@@ -55,30 +79,38 @@ public class TransitServiceApp {
                 return;
             }
 
-            ObjectMapper mapper = new ObjectMapper();
-
             Map<String, Object> hub = mapper.readValue(
                     hubResponse.body(),
                     new TypeReference<Map<String, Object>>() {}
             );
 
-            // Get current delay stage
-            HttpRequest delayRequest = HttpRequest.newBuilder()
-                    .uri(URI.create(delayStageServiceUrl + "/delay-stage/" + hubId))
-                    .GET()
-                    .build();
+            int stage;
 
-            HttpResponse<String> delayResponse = client.send(
-                    delayRequest,
-                    HttpResponse.BodyHandlers.ofString()
-            );
+            if (store != null) {
+                stage = store.getStage(hubId);
+            } else {
+                // Get current delay stage from delay-stage-service
+                HttpRequest delayRequest = HttpRequest.newBuilder()
+                        .uri(URI.create(
+                                delayStageServiceUrl
+                                        + "/delay-stage/"
+                                        + hubId
+                        ))
+                        .GET()
+                        .build();
 
-            Map<String, Object> delayStage = mapper.readValue(
-                    delayResponse.body(),
-                    new TypeReference<Map<String, Object>>() {}
-            );
+                HttpResponse<String> delayResponse = client.send(
+                        delayRequest,
+                        HttpResponse.BodyHandlers.ofString()
+                );
 
-            int stage = ((Number) delayStage.get("stage")).intValue();
+                Map<String, Object> delayStage = mapper.readValue(
+                        delayResponse.body(),
+                        new TypeReference<Map<String, Object>>() {}
+                );
+
+                stage = ((Number) delayStage.get("stage")).intValue();
+            }
 
             int etaMinutes = 30 + (stage * 10);
 
