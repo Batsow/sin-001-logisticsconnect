@@ -252,4 +252,14 @@ class HubDataCleanerTest {
         assertEquals(null, result);
     }
 
+
+    @Test
+    void shouldReturnNullForNullActive() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        Boolean result = cleaner.cleanActive(null);
+
+        assertEquals(null, result);
+    }
+
 }

@@ -72,6 +72,10 @@ public class HubDataCleaner {
 
 
     public Boolean cleanActive(String active) {
+        if (active == null) {
+            return null;
+        }
+
         active = active.trim().toLowerCase();
 
         if (active.equals("yes") || active.equals("y") || active.equals("1") || active.equals("true")) {
