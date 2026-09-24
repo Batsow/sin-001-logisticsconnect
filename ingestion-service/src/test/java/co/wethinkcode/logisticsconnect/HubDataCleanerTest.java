@@ -2,6 +2,8 @@ package co.wethinkcode.logisticsconnect;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -456,6 +458,25 @@ class HubDataCleanerTest {
         String result = cleaner.cleanSortingCenter("Cape Town  Port");
 
         assertEquals("Cape Town Port", result);
+    }
+
+
+    @Test
+    void shouldHandleUnknownActiveStatusFromCsv() {
+        HubCsvReader reader = new HubCsvReader();
+
+        List<Hub> hubs = reader.read("src/main/resources/hubs-global.csv");
+
+        Hub hub = null;
+
+        for (Hub currentHub : hubs) {
+            if ("H-511".equals(currentHub.getHubId())) {
+                hub = currentHub;
+                break;
+            }
+        }
+
+        assertEquals(null, hub.getActive());
     }
 
 }
