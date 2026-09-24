@@ -50,6 +50,18 @@ public class DelayStageServiceAppTest {
 
 
     @Test
+    void shouldRejectInvalidDelayStage() {
+        Javalin app = DelayStageServiceApp.createApp();
+
+        JavalinTest.test(app, (server, client) -> {
+            var response = client.put("/delay-stage/H-500?stage=9");
+
+            assertEquals(400, response.code());
+        });
+    }
+
+
+    @Test
     void shouldChangeDelayStage() {
         Javalin app = DelayStageServiceApp.createApp();
 

@@ -33,6 +33,11 @@ public class DelayStageServiceApp {
 
             int stage = Integer.parseInt(stageParameter);
 
+            if (stage < 0 || stage > 8) {
+                ctx.status(400);
+                return;
+            }
+
             delayStages.put(hubId, stage);
 
             ctx.status(200);
