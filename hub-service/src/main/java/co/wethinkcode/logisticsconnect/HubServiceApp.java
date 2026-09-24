@@ -44,7 +44,10 @@ public class HubServiceApp {
                 if (hubId.equals(hub.get("hubId"))) {
                     String sortingCenter = (String) hub.get("sortingCenter");
 
-                    ctx.result(hubId + " - " + sortingCenter);
+                    ctx.json(Map.of(
+                            "hubId", hubId,
+                            "sortingCenter", sortingCenter
+                    ));
                     return;
                 }
             }

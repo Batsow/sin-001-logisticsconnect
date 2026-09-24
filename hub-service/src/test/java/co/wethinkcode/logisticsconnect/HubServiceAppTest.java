@@ -92,4 +92,17 @@ public class HubServiceAppTest {
             assertTrue(ingestionServiceWasCalled.get());
         });
     }
+
+
+    @Test
+    void shouldReturnJsonResponse() {
+        Javalin app = HubServiceApp.createApp();
+
+        JavalinTest.test(app, (server, client) -> {
+            var response = client.get("/hubs/H-500");
+
+            assertEquals(200, response.code());
+            assertTrue(response.header("Content-Type").contains("application"));
+        });
+    }
 }
