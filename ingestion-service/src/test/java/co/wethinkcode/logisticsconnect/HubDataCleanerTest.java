@@ -363,4 +363,13 @@ class HubDataCleanerTest {
         assertEquals("Johannesburg Central", result);
     }
 
+    @Test
+    void shouldCleanSortingCenterMultipleSpaces() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        String result = cleaner.cleanSortingCenter("Cape Town  Port");
+
+        assertEquals("Cape Town Port", result);
+    }
+
 }
