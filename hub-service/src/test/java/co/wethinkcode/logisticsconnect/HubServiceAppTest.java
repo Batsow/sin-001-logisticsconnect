@@ -131,4 +131,17 @@ public class HubServiceAppTest {
             assertTrue(response.body().string().contains("\"active\":true"));
         });
     }
+
+
+
+    @Test
+    void shouldReturn404ForUnknownHub() {
+        Javalin app = HubServiceApp.createApp();
+
+        JavalinTest.test(app, (server, client) -> {
+            var response = client.get("/hubs/H-999");
+
+            assertEquals(404, response.code());
+        });
+    }
 }
