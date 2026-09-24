@@ -15,13 +15,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class TransitServiceAppTest {
 
     private Javalin hubService;
+    private Javalin delayStageService;
+
     private String hubServiceUrl;
+    private String delayStageServiceUrl;
+
     private AtomicBoolean hubServiceWasCalled;
+    private AtomicBoolean delayStageServiceWasCalled;
 
     @BeforeEach
-    void startFakeHubService() {
+    void startFakeServices() {
         hubServiceWasCalled = new AtomicBoolean(false);
+        delayStageServiceWasCalled = new AtomicBoolean(false);
 
+        // Fake hub-service
         hubService = Javalin.create();
 
         hubService.get("/hubs/{hubId}", ctx -> {
@@ -36,18 +43,36 @@ public class TransitServiceAppTest {
         });
 
         hubService.start(0);
-
         hubServiceUrl = "http://localhost:" + hubService.port();
+
+        // Fake delay-stage-service
+        delayStageService = Javalin.create();
+
+        delayStageService.get("/delay-stage/{hubId}", ctx -> {
+            delayStageServiceWasCalled.set(true);
+
+            ctx.json(Map.of(
+                    "hubId", "H-500",
+                    "stage", 3
+            ));
+        });
+
+        delayStageService.start(0);
+        delayStageServiceUrl = "http://localhost:" + delayStageService.port();
     }
 
     @AfterEach
-    void stopFakeHubService() {
+    void stopFakeServices() {
         hubService.stop();
+        delayStageService.stop();
     }
 
     @Test
     void shouldReturnEtaForHub() {
-        Javalin app = TransitServiceApp.createApp(hubServiceUrl);
+        Javalin app = TransitServiceApp.createApp(
+                hubServiceUrl,
+                delayStageServiceUrl
+        );
 
         JavalinTest.test(app, (server, client) -> {
             var response = client.get("/eta/H-500");
@@ -58,7 +83,10 @@ public class TransitServiceAppTest {
 
     @Test
     void shouldReturnEtaAsJson() {
-        Javalin app = TransitServiceApp.createApp(hubServiceUrl);
+        Javalin app = TransitServiceApp.createApp(
+                hubServiceUrl,
+                delayStageServiceUrl
+        );
 
         JavalinTest.test(app, (server, client) -> {
             var response = client.get("/eta/H-500");
@@ -74,7 +102,10 @@ public class TransitServiceAppTest {
 
     @Test
     void shouldGetHubInformationFromHubService() {
-        Javalin app = TransitServiceApp.createApp(hubServiceUrl);
+        Javalin app = TransitServiceApp.createApp(
+                hubServiceUrl,
+                delayStageServiceUrl
+        );
 
         JavalinTest.test(app, (server, client) -> {
             var response = client.get("/eta/H-500");
@@ -84,10 +115,12 @@ public class TransitServiceAppTest {
         });
     }
 
-
     @Test
     void shouldIncludeSortingCenterInEtaResponse() {
-        Javalin app = TransitServiceApp.createApp(hubServiceUrl);
+        Javalin app = TransitServiceApp.createApp(
+                hubServiceUrl,
+                delayStageServiceUrl
+        );
 
         JavalinTest.test(app, (server, client) -> {
             var response = client.get("/eta/H-500");
@@ -96,7 +129,24 @@ public class TransitServiceAppTest {
 
             String body = response.body().string();
 
-            assertTrue(body.contains("\"sortingCenter\":\"Johannesburg Central\""));
+            assertTrue(
+                    body.contains("\"sortingCenter\":\"Johannesburg Central\"")
+            );
+        });
+    }
+
+    @Test
+    void shouldGetDelayStageFromDelayStageService() {
+        Javalin app = TransitServiceApp.createApp(
+                hubServiceUrl,
+                delayStageServiceUrl
+        );
+
+        JavalinTest.test(app, (server, client) -> {
+            var response = client.get("/eta/H-500");
+
+            assertEquals(200, response.code());
+            assertTrue(delayStageServiceWasCalled.get());
         });
     }
 }
