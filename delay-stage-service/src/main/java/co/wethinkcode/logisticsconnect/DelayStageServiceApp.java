@@ -7,9 +7,12 @@ import java.util.Map;
 
 public class DelayStageServiceApp {
 
-    private static final Map<String, Integer> delayStages = new HashMap<>();
-
     public static Javalin createApp() {
+        return createApp((hubId, stage) -> {
+        });
+    }
+
+    public static Javalin createApp(DelayStagePublisher publisher) {
         Javalin app = Javalin.create();
 
         Map<String, Integer> delayStages = new HashMap<>();
@@ -51,6 +54,8 @@ public class DelayStageServiceApp {
             }
 
             delayStages.put(hubId, stage);
+
+            publisher.publish(hubId, stage);
 
             ctx.status(200);
         });

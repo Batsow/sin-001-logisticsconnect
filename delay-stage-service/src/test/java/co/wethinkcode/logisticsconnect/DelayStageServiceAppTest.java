@@ -4,6 +4,9 @@ import io.javalin.Javalin;
 import io.javalin.testtools.JavalinTest;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -98,6 +101,24 @@ public class DelayStageServiceAppTest {
             var response = client.put("/delay-stage/H-500?stage=abc");
 
             assertEquals(400, response.code());
+        });
+    }
+
+
+    @Test
+    void shouldPublishWhenDelayStageChanges() {
+        List<String> publishedMessages = new ArrayList<>();
+
+        DelayStagePublisher publisher = (hubId, stage) ->
+                publishedMessages.add(hubId + ":" + stage);
+
+        Javalin app = DelayStageServiceApp.createApp(publisher);
+
+        JavalinTest.test(app, (server, client) -> {
+            var response = client.put("/delay-stage/H-500?stage=3");
+
+            assertEquals(200, response.code());
+            assertTrue(publishedMessages.contains("H-500:3"));
         });
     }
 }
