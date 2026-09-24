@@ -76,4 +76,16 @@ public class DelayStageServiceAppTest {
             assertTrue(getResponse.body().string().contains("\"stage\":3"));
         });
     }
+
+
+    @Test
+    void shouldRejectMissingDelayStage() {
+        Javalin app = DelayStageServiceApp.createApp();
+
+        JavalinTest.test(app, (server, client) -> {
+            var response = client.put("/delay-stage/H-500");
+
+            assertEquals(400, response.code());
+        });
+    }
 }

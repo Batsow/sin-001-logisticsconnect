@@ -31,6 +31,11 @@ public class DelayStageServiceApp {
             String hubId = ctx.pathParam("hubId");
             String stageParameter = ctx.queryParam("stage");
 
+            if (stageParameter == null) {
+                ctx.status(400);
+                return;
+            }
+
             int stage = Integer.parseInt(stageParameter);
 
             if (stage < 0 || stage > 8) {
