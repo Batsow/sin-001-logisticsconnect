@@ -44,4 +44,23 @@ public class HubCsvReaderTest {
 
         assertEquals(1, johannesburgCentralCount);
     }
+
+
+    @Test
+    void shouldKeepHubWithMissingProvince() {
+        HubCsvReader reader = new HubCsvReader();
+
+        List<Hub> hubs = reader.read("src/main/resources/hubs-global.csv");
+
+        Hub hub = null;
+
+        for (Hub currentHub : hubs) {
+            if ("H-508".equals(currentHub.getHubId())) {
+                hub = currentHub;
+                break;
+            }
+        }
+
+        assertEquals(null, hub.getProvince());
+    }
 }
