@@ -372,4 +372,13 @@ class HubDataCleanerTest {
         assertEquals("Cape Town Port", result);
     }
 
+    @Test
+    void shouldCleanHubIdCasing() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        String result = cleaner.cleanHubId("h-501");
+
+        assertEquals("H-501", result);
+    }
+
 }
