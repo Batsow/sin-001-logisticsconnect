@@ -46,4 +46,20 @@ class IngestionServiceAppTest {
             assertTrue(response.body().string().contains("H-500"));
         });
     }
+
+
+    @Test
+    void shouldReturnCleanedHubValues() {
+        Javalin app = IngestionServiceApp.createApp();
+
+        JavalinTest.test(app, (server, client) -> {
+            var response = client.get("/hubs");
+            String body = response.body().string();
+
+            assertTrue(body.contains("\"hubId\":\"H-500\""));
+            assertTrue(body.contains("\"province\":\"Gauteng\""));
+            assertTrue(body.contains("\"sortingCenter\":\"Johannesburg Central\""));
+            assertTrue(body.contains("\"active\":true"));
+        });
+    }
 }
