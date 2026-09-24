@@ -125,7 +125,27 @@ public class TransitServiceApp {
         return app;
     }
 
-    public static void main(String[] args) {
-        createApp().start(7053);
+    public static void main(String[] args) throws Exception {
+        TransitDelayStageStore store =
+                new TransitDelayStageStore();
+
+        TransitDelayStageSubscriber subscriber =
+                new TransitDelayStageSubscriber(store);
+
+        subscriber.start();
+
+        Runtime.getRuntime().addShutdownHook(
+                new Thread(() -> {
+                    try {
+                        subscriber.stop();
+                    } catch (Exception ignored) {
+                    }
+                })
+        );
+
+        createApp(
+                "http://localhost:7051",
+                store
+        ).start(7053);
     }
 }
