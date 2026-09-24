@@ -262,4 +262,14 @@ class HubDataCleanerTest {
         assertEquals(null, result);
     }
 
+
+    @Test
+    void shouldReturnNullForTbdActive() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        Boolean result = cleaner.cleanActive("TBD");
+
+        assertEquals(null, result);
+    }
+
 }
