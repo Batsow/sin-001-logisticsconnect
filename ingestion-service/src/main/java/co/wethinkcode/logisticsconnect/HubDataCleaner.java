@@ -63,6 +63,10 @@ public class HubDataCleaner {
 
         hubId = hubId.trim();
 
+        if (hubId.isEmpty()) {
+            return null;
+        }
+
         return hubId.toUpperCase();
     }
 
