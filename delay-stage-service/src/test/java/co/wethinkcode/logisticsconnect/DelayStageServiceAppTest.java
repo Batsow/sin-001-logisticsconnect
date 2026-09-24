@@ -40,9 +40,28 @@ public class DelayStageServiceAppTest {
         JavalinTest.test(app, (server, client) -> {
             var response = client.get("/delay-stage/H-500");
 
+            String body = response.body().string();
+
             assertEquals(200, response.code());
             assertTrue(response.header("Content-Type").contains("application/json"));
-            assertTrue(response.body().string().contains("\"stage\":0"));
+            assertTrue(body.contains("\"stage\":0"));
+        });
+    }
+
+
+    @Test
+    void shouldChangeDelayStage() {
+        Javalin app = DelayStageServiceApp.createApp();
+
+        JavalinTest.test(app, (server, client) -> {
+            var response = client.put("/delay-stage/H-500?stage=3");
+
+            assertEquals(200, response.code());
+
+            var getResponse = client.get("/delay-stage/H-500");
+
+            assertEquals(200, getResponse.code());
+            assertTrue(getResponse.body().string().contains("\"stage\":3"));
         });
     }
 }
