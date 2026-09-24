@@ -4,12 +4,17 @@ import io.javalin.Javalin;
 
 public class HubServiceApp {
 
-    public static void main(String[] args) {
-        Javalin app = Javalin.create().start(7051);
+    public static Javalin createApp() {
+        Javalin app = Javalin.create();
 
         app.get("/health", ctx -> ctx.result("OK"));
 
-        // TODO (Serves provinces and sorting centers (place-name source of truth).)
-        // Add domain endpoints for hub-service here.
+        app.get("/hubs/{hubId}", ctx -> ctx.result(ctx.pathParam("hubId")));
+
+        return app;
+    }
+
+    public static void main(String[] args) {
+        createApp().start(7051);
     }
 }
