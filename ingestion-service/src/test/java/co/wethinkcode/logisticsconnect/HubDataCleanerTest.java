@@ -438,4 +438,14 @@ class HubDataCleanerTest {
         assertEquals(null, result);
     }
 
+
+    @Test
+    void shouldNormalizeKwaZuluNatalProvince() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        String result = cleaner.cleanProvince("Kwa-Zulu Natal");
+
+        assertEquals("KwaZulu-Natal", result);
+    }
+
 }
