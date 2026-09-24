@@ -92,3 +92,52 @@ curl http://localhost:7050/health   # -> OK
 
 To add real tests, add JUnit 5 + the Surefire plugin to `pom.xml`, put tests under
 `src/test/java/co/wethinkcode/logisticsconnect/`, and run `mvn test`.
+
+
+
+## Stage 1: Data Cleaning Decisions
+
+The ingestion service reads `hubs-global.csv`, cleans the data, removes duplicate hub records, and exposes the cleaned records through the `/hubs` REST endpoint.
+
+### Cleaning rules
+
+The following cleaning rules are applied:
+
+* `hub_id` values are trimmed and converted to uppercase.
+* Province values are trimmed and normalized to a consistent capitalized format.
+* Known province variants such as `gauteng`, `eastern cape`, and `Kwa-Zulu Natal` are normalized.
+* Sorting-center names are trimmed, internal extra spaces are removed, and the names are normalized to a consistent format.
+* Boolean values such as `Y`, `yes`, `1`, and `true` are converted to `true`.
+* Boolean values such as `N`, `no`, `0`, and `false` are converted to `false`.
+* Missing or placeholder values such as blank values, `N/A`, `TBD`, `unknown`, `-`, and `NaN` are represented as `null`.
+
+The current CSV does not contain date or numeric fields, so date and numeric normalization is not required for the current dataset.
+
+### Duplicate strategy
+
+A duplicate hub is identified using the cleaned `province` and `sorting_center` values.
+
+For example, records that both represent:
+
+```text
+Gauteng | Johannesburg Central
+```
+
+are treated as the same real-world hub, even when their `hub_id` or other formatting differs.
+
+When duplicates are found, the ingestion service keeps the **first occurrence** and discards later occurrences.
+
+This strategy was chosen because it is simple, deterministic, and easy to understand. The service does not attempt to automatically merge conflicting values such as different `active` statuses. The first record is retained, which avoids silently inventing a value that was not present in the source data.
+
+The original CSV contains 18 records. After cleaning and duplicate removal, the ingestion service exposes 12 unique hub records.
+
+### REST endpoint
+
+The cleaned hub records are exposed through:
+
+```text
+GET /hubs
+```
+
+The endpoint returns the cleaned hub data as JSON so that other services can consume the ingestion service rather than reading the raw CSV directly.
+
