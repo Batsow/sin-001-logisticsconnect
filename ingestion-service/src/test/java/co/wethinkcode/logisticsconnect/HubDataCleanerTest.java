@@ -293,4 +293,14 @@ class HubDataCleanerTest {
         assertEquals(null, result);
     }
 
+
+    @Test
+    void shouldReturnNullForUnknownProvince() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        String result = cleaner.cleanProvince("unknown");
+
+        assertEquals(null, result);
+    }
+
 }

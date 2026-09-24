@@ -13,6 +13,10 @@ public class HubDataCleaner {
             return null;
         }
 
+        if (province.equals("unknown")) {
+            return null;
+        }
+
         String[] words = province.split(" ");
         String result = "";
 
