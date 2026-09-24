@@ -37,11 +37,14 @@ public class HubDataCleaner {
         String result = "";
 
         for (String word : words) {
-            String firstLetter = word.substring(0, 1).toUpperCase();
-            String remainingLetters = word.substring(1);
+            if (!word.isEmpty()) {
+                String firstLetter = word.substring(0, 1).toUpperCase();
+                String remainingLetters = word.substring(1);
 
-            result = result + firstLetter + remainingLetters + " ";
+                result = result + firstLetter + remainingLetters + " ";
+            }
         }
+
         result = result.trim();
 
         if (result.equals("Kwa-zulu Natal") || result.equals("Kwazulu Natal")) {

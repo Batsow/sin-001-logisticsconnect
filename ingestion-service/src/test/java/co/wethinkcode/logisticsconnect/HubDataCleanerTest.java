@@ -343,4 +343,14 @@ class HubDataCleanerTest {
         assertEquals(null, result);
     }
 
+
+    @Test
+    void shouldCollapseMultipleSpacesInProvince() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        String result = cleaner.cleanProvince("Western  Cape");
+
+        assertEquals("Western Cape", result);
+    }
+
 }
