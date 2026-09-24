@@ -282,4 +282,15 @@ class HubDataCleanerTest {
         assertEquals(null, result);
     }
 
+
+
+    @Test
+    void shouldReturnNullForNanActive() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        Boolean result = cleaner.cleanActive("NaN");
+
+        assertEquals(null, result);
+    }
+
 }
