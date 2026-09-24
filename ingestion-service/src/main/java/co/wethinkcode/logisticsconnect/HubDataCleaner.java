@@ -47,10 +47,12 @@ public class HubDataCleaner {
 
         result = result.trim();
 
-        if (result.equals("Kwa-zulu Natal") || result.equals("Kwazulu Natal")) {
+        if (result.equals("Kwa-zulu Natal")
+                || result.equals("Kwazulu Natal")
+                || result.equals("Kwazulu-natal")) {
+
             result = "KwaZulu-Natal";
         }
-
         return result;
     }
 

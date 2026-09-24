@@ -28,7 +28,8 @@ public class HubCsvReaderTest {
 
         List<Hub> hubs = reader.read("src/main/resources/hubs-global.csv");
 
-        assertEquals(12, hubs.size());
+        assertEquals(11, hubs.size());
+        assertEquals(11, hubs.size());
     }
 
 
@@ -92,7 +93,7 @@ public class HubCsvReaderTest {
         Hub hub = null;
 
         for (Hub currentHub : hubs) {
-            if ("H-506".equals(currentHub.getHubId())) {
+            if ("H-503".equals(currentHub.getHubId())) {
                 hub = currentHub;
                 break;
             }

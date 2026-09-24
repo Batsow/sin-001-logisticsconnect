@@ -479,4 +479,33 @@ class HubDataCleanerTest {
         assertEquals(null, hub.getActive());
     }
 
+
+    @Test
+    void shouldNormalizeKwaZuluNatalVariantsToSameValue() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        String first =
+                cleaner.cleanProvince("KwaZulu-Natal");
+
+        String second =
+                cleaner.cleanProvince("Kwa-Zulu Natal");
+
+        String third =
+                cleaner.cleanProvince("Kwazulu-natal");
+
+        assertEquals(first, second);
+        assertEquals(second, third);
+        assertEquals("KwaZulu-Natal", first);
+    }
+
+    @Test
+    void shouldNormalizeKwazuluNatalWithHyphen() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        String cleanedProvince =
+                cleaner.cleanProvince("Kwazulu-natal");
+
+        assertEquals("KwaZulu-Natal", cleanedProvince);
+    }
+
 }

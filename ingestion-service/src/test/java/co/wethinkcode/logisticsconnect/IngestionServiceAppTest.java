@@ -70,7 +70,7 @@ class IngestionServiceAppTest {
 
 
     @Test
-    void shouldReturnTwelveUniqueHubs() {
+    void shouldReturnElevenUniqueHubs() {
         Javalin app = IngestionServiceApp.createApp();
 
         JavalinTest.test(app, (server, client) -> {
@@ -83,7 +83,7 @@ class IngestionServiceAppTest {
                     List.class
             );
 
-            assertEquals(12, hubs.size());
+            assertEquals(11, hubs.size());
         });
     }
 }
