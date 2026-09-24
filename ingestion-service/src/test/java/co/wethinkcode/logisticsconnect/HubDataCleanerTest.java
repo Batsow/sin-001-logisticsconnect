@@ -353,4 +353,14 @@ class HubDataCleanerTest {
         assertEquals("Western Cape", result);
     }
 
+
+    @Test
+    void shouldCleanSortingCenterCasing() {
+        HubDataCleaner cleaner = new HubDataCleaner();
+
+        String result = cleaner.cleanSortingCenter("johannesburg central");
+
+        assertEquals("Johannesburg Central", result);
+    }
+
 }

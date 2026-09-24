@@ -71,7 +71,10 @@ public class HubDataCleaner {
 
         for (String word : words) {
             if (!word.isEmpty()) {
-                result = result + word + " ";
+                String firstLetter = word.substring(0, 1).toUpperCase();
+                String remainingLetters = word.substring(1).toLowerCase();
+
+                result = result + firstLetter + remainingLetters + " ";
             }
         }
 
