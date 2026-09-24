@@ -82,4 +82,22 @@ public class HubCsvReaderTest {
 
         assertEquals("Eastern Cape", hub.getProvince());
     }
+
+    @Test
+    void shouldCleanKwaZuluNatalFromCsv() {
+        HubCsvReader reader = new HubCsvReader();
+
+        List<Hub> hubs = reader.read("src/main/resources/hubs-global.csv");
+
+        Hub hub = null;
+
+        for (Hub currentHub : hubs) {
+            if ("H-506".equals(currentHub.getHubId())) {
+                hub = currentHub;
+                break;
+            }
+        }
+
+        assertEquals("KwaZulu-Natal", hub.getProvince());
+    }
 }
