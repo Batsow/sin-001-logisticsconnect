@@ -31,4 +31,18 @@ public class DelayStageServiceAppTest {
             assertTrue(response.body().string().contains("0"));
         });
     }
+
+
+    @Test
+    void shouldReturnDelayStageAsJson() {
+        Javalin app = DelayStageServiceApp.createApp();
+
+        JavalinTest.test(app, (server, client) -> {
+            var response = client.get("/delay-stage/H-500");
+
+            assertEquals(200, response.code());
+            assertTrue(response.header("Content-Type").contains("application/json"));
+            assertTrue(response.body().string().contains("\"stage\":0"));
+        });
+    }
 }

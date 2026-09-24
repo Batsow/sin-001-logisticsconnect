@@ -2,6 +2,8 @@ package co.wethinkcode.logisticsconnect;
 
 import io.javalin.Javalin;
 
+import java.util.Map;
+
 public class DelayStageServiceApp {
 
     public static Javalin createApp() {
@@ -9,8 +11,14 @@ public class DelayStageServiceApp {
 
         app.get("/health", ctx -> ctx.result("OK"));
 
-        app.get("/delay-stage/{hubId}", ctx -> ctx.result("0"));
+        app.get("/delay-stage/{hubId}", ctx -> {
+            String hubId = ctx.pathParam("hubId");
 
+            ctx.json(Map.of(
+                    "hubId", hubId,
+                    "stage", 0
+            ));
+        });
         return app;
     }
 
