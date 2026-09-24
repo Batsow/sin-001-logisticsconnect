@@ -53,9 +53,13 @@ public class DelayStageServiceApp {
                 return;
             }
 
+            int previousStage = delayStages.getOrDefault(hubId, 0);
+
             delayStages.put(hubId, stage);
 
-            publisher.publish(hubId, stage);
+            if (previousStage != stage) {
+                publisher.publish(hubId, stage);
+            }
 
             ctx.status(200);
         });

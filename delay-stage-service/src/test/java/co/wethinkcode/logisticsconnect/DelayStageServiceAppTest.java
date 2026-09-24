@@ -121,6 +121,28 @@ public class DelayStageServiceAppTest {
             assertTrue(publishedMessages.contains("H-500:3"));
         });
     }
+
+
+    @Test
+    void shouldNotPublishWhenDelayStageDoesNotChange() {
+        List<String> publishedMessages = new ArrayList<>();
+
+        DelayStagePublisher publisher = (hubId, stage) ->
+                publishedMessages.add(hubId + ":" + stage);
+
+        Javalin app = DelayStageServiceApp.createApp(publisher);
+
+        JavalinTest.test(app, (server, client) -> {
+            var firstResponse = client.put("/delay-stage/H-500?stage=3");
+            assertEquals(200, firstResponse.code());
+
+            var secondResponse = client.put("/delay-stage/H-500?stage=3");
+            assertEquals(200, secondResponse.code());
+
+            assertEquals(1, publishedMessages.size());
+            assertTrue(publishedMessages.contains("H-500:3"));
+        });
+    }
 }
 
 
