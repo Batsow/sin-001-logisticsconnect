@@ -42,10 +42,12 @@ public class HubServiceApp {
 
             for (Map<String, Object> hub : hubs) {
                 if (hubId.equals(hub.get("hubId"))) {
+                    String province = (String) hub.get("province");
                     String sortingCenter = (String) hub.get("sortingCenter");
 
                     ctx.json(Map.of(
                             "hubId", hubId,
+                            "province", province,
                             "sortingCenter", sortingCenter
                     ));
                     return;

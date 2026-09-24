@@ -105,4 +105,17 @@ public class HubServiceAppTest {
             assertTrue(response.header("Content-Type").contains("application"));
         });
     }
+
+
+    @Test
+    void shouldReturnProvinceInResponse() {
+        Javalin app = HubServiceApp.createApp();
+
+        JavalinTest.test(app, (server, client) -> {
+            var response = client.get("/hubs/H-500");
+
+            assertEquals(200, response.code());
+            assertTrue(response.body().string().contains("Gauteng"));
+        });
+    }
 }
