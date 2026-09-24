@@ -449,6 +449,13 @@ class HubDataCleanerTest {
     }
 
 
+    @Test
+    void shouldCleanCapeTownPortWithMultipleSpaces() {
+        HubDataCleaner cleaner = new HubDataCleaner();
 
+        String result = cleaner.cleanSortingCenter("Cape Town  Port");
+
+        assertEquals("Cape Town Port", result);
+    }
 
 }
