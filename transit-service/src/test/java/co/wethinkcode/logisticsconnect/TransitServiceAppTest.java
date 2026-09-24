@@ -83,4 +83,20 @@ public class TransitServiceAppTest {
             assertTrue(hubServiceWasCalled.get());
         });
     }
+
+
+    @Test
+    void shouldIncludeSortingCenterInEtaResponse() {
+        Javalin app = TransitServiceApp.createApp(hubServiceUrl);
+
+        JavalinTest.test(app, (server, client) -> {
+            var response = client.get("/eta/H-500");
+
+            assertEquals(200, response.code());
+
+            String body = response.body().string();
+
+            assertTrue(body.contains("\"sortingCenter\":\"Johannesburg Central\""));
+        });
+    }
 }

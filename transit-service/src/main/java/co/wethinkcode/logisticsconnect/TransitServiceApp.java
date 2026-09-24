@@ -45,6 +45,7 @@ public class TransitServiceApp {
 
             ctx.json(Map.of(
                     "hubId", hub.get("hubId"),
+                    "sortingCenter", hub.get("sortingCenter"),
                     "etaMinutes", 0
             ));
         });
