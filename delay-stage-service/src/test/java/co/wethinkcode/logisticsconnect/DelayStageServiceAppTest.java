@@ -1,9 +1,13 @@
 package co.wethinkcode.logisticsconnect;
 
+import co.wethinkcode.logisticsconnect.mq.ActiveMqDelayStagePublisher;
+import co.wethinkcode.logisticsconnect.mq.MqConfig;
 import io.javalin.Javalin;
 import io.javalin.testtools.JavalinTest;
+import org.apache.activemq.ActiveMQConnectionFactory;
 import org.junit.jupiter.api.Test;
 
+import javax.jms.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -160,6 +164,49 @@ public class DelayStageServiceAppTest {
             assertEquals(200, response.code());
             assertTrue(publishedMessages.contains("H-501:5"));
         });
+    }
+
+
+    @Test
+    void shouldPublishToActiveMqWhenDelayStageChanges() throws Exception {
+        ActiveMQConnectionFactory factory =
+                new ActiveMQConnectionFactory(MqConfig.BROKER_URL);
+
+        Connection connection = factory.createConnection();
+
+        Session session = connection.createSession(
+                false,
+                Session.AUTO_ACKNOWLEDGE
+        );
+
+        Topic topic = session.createTopic(MqConfig.TOPIC);
+        MessageConsumer consumer = session.createConsumer(topic);
+
+        connection.start();
+
+        DelayStagePublisher publisher =
+                new ActiveMqDelayStagePublisher();
+
+        Javalin app = DelayStageServiceApp.createApp(publisher);
+
+        JavalinTest.test(app, (server, client) -> {
+            var response = client.put("/delay-stage/H-601?stage=4");
+
+            assertEquals(200, response.code());
+        });
+
+        Message message = consumer.receive(3000);
+
+        assertTrue(message instanceof TextMessage);
+
+        String body = ((TextMessage) message).getText();
+
+        assertTrue(body.contains("\"hubId\":\"H-601\""));
+        assertTrue(body.contains("\"stage\":4"));
+
+        consumer.close();
+        session.close();
+        connection.close();
     }
 }
 
