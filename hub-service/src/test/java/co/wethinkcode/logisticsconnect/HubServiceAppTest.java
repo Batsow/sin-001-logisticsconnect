@@ -31,4 +31,17 @@ public class HubServiceAppTest {
             assertTrue(response.body().string().contains("H-500"));
         });
     }
+
+
+    @Test
+    void shouldReturnSortingCenterInResponse() {
+        Javalin app = HubServiceApp.createApp();
+
+        JavalinTest.test(app, (server, client) -> {
+            var response = client.get("/hubs/H-500");
+
+            assertEquals(200, response.code());
+            assertTrue(response.body().string().contains("Johannesburg Central"));
+        });
+    }
 }

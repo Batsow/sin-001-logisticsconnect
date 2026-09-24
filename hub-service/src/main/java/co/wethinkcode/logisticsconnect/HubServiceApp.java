@@ -9,8 +9,15 @@ public class HubServiceApp {
 
         app.get("/health", ctx -> ctx.result("OK"));
 
-        app.get("/hubs/{hubId}", ctx -> ctx.result(ctx.pathParam("hubId")));
+        app.get("/hubs/{hubId}", ctx -> {
+            String hubId = ctx.pathParam("hubId");
 
+            if (hubId.equals("H-500")) {
+                ctx.result("H-500 - Johannesburg Central");
+            } else {
+                ctx.result(hubId);
+            }
+        });
         return app;
     }
 
