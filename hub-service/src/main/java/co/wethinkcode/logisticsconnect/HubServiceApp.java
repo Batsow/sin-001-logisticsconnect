@@ -1,6 +1,15 @@
 package co.wethinkcode.logisticsconnect;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.Javalin;
+
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.List;
+import java.util.Map;
 
 public class HubServiceApp {
 
@@ -12,11 +21,35 @@ public class HubServiceApp {
         app.get("/hubs/{hubId}", ctx -> {
             String hubId = ctx.pathParam("hubId");
 
-            if (hubId.equals("H-500")) {
-                ctx.result("H-500 - Johannesburg Central");
-            } else {
-                ctx.result(hubId);
+            HttpClient client = HttpClient.newHttpClient();
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("http://localhost:7050/hubs"))
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = client.send(
+                    request,
+                    HttpResponse.BodyHandlers.ofString()
+            );
+
+            ObjectMapper mapper = new ObjectMapper();
+
+            List<Map<String, Object>> hubs = mapper.readValue(
+                    response.body(),
+                    new TypeReference<List<Map<String, Object>>>() {}
+            );
+
+            for (Map<String, Object> hub : hubs) {
+                if (hubId.equals(hub.get("hubId"))) {
+                    String sortingCenter = (String) hub.get("sortingCenter");
+
+                    ctx.result(hubId + " - " + sortingCenter);
+                    return;
+                }
             }
+
+            ctx.status(404);
         });
         return app;
     }
